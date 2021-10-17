@@ -161,7 +161,7 @@ plrSection:addSlider("Camera offset X", 0, 0, 20, function(valuex)
     CameraoffsetX = valuex
 end)
 local teamSection = PLa:addSection("TeamChanger  (Cooldown)")
-teamSection:addDropdown("Team changer", {"Gunsmith", "Civilian", "Crafter", "Advanced Gunsmith", "Trucker", "Tow Trucker", "Secret Service", "Advanced Car Dealer", "Car Dealer","Deliverant", "Criminal", "Crafter", "Cab Driver", "Paramedic", "Mayor", "Military", "SWAT", "Sheriff"}, function(team)
+teamSection:addDropdown("Team Changer", {"Gunsmith", "Civilian", "Crafter", "Advanced Gunsmith", "Trucker", "Tow Trucker", "Secret Service", "Advanced Car Dealer", "Car Dealer","Deliverant", "Criminal", "Crafter", "Cab Driver", "Paramedic", "Mayor", "Military", "SWAT", "Sheriff"}, function(team)
     game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").TeamChanger:FireServer(team)
 end)
 
@@ -274,7 +274,7 @@ OtherSection:addButton("Teleport To Spectated", function()
             end
         end
         end
-end
+    end --game:GetService("ReplicatedStorage").CurrentMayor
 end)
 OtherSection:addButton("View Spectated Backpack", function()
     if plrNum ~= 1 then
@@ -289,9 +289,115 @@ end
 end)
 
 --Vehicle Page
-local Car = Main:addPage("Vehicle : To Be Added", 5012544693)
-local CarSection = Car:addSection("Fun")
+local Car = Main:addPage("Vehicle", 5012544693)
+local CarSection = Car:addSection("Gas")
+local GasAmount = 1
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
 
+CarSection:addSlider("Buy Gas", 1, 1, 100, function(valuex)
+    GasAmount = valuex
+end)
+
+CarSection:addButton("Buy Gas", function()
+    for i,v in pairs(workspace.PlayerVehicles:GetChildren()) do
+		game:GetService("ReplicatedStorage")["_CS.Events"].FillUpCar:FireServer(v, GasAmount)
+        print(GasAmount)
+	end 
+end)
+local CarSection = Car:addSection("Misc")
+
+CarSection:addButton("Unlock cars (LOOP)", function() 
+    while wait(3) do
+        for i,v in pairs(game:GetService("Workspace").PlayerVehicles:GetDescendants()) do
+            if v:IsA("VehicleSeat") or v:IsA("Seat") then
+                v.Disabled = false
+                wait(.3)
+            end
+        end
+    end
+end)
+
+CarSection:addButton("Car Speed", function()
+    local CarThrust=Instance.new("BodyThrust", game:GetService("Players").LocalPlayer.Character.Humanoid.SeatPart.Parent:FindFirstChild("Engine"))
+    mouse.KeyDown:connect(function(key)
+    if key:byte() == 119 then
+    CarThrust.force=Vector3.new(0,0,-6000)
+    end end)
+    mouse.KeyUp:connect(function(key)
+    if key:byte() == 119 then
+    CarThrust.force=Vector3.new(0,0,0)
+    end end)
+    local CarThrust=Instance.new("BodyThrust", game:GetService("Players").LocalPlayer.Character.Humanoid.SeatPart.Parent:FindFirstChild("Engine"))
+    mouse.KeyDown:connect(function(key)
+    if key:byte() == 115 then
+    CarThrust.force=Vector3.new(0,0,8000)
+    end end)
+    mouse.KeyUp:connect(function(key)
+    if key:byte() == 115 then
+    CarThrust.force=Vector3.new(0,0,0)
+    end end)
+end)
+
+-- Buy Page
+local Buy = Main:addPage("Buy", 5012544693)
+local BuySection = Buy:addSection("Team")
+BuySection:addDropdown("Team Changer", {"Gunsmith", "Civilian", "Crafter", "Advanced Gunsmith", "Trucker", "Tow Trucker", "Secret Service", "Advanced Car Dealer", "Car Dealer","Deliverant", "Criminal", "Crafter", "Cab Driver", "Paramedic", "Mayor", "Military", "SWAT", "Sheriff"}, function(team)
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").TeamChanger:FireServer(team)
+end)
+
+local BuySection = Buy:addSection("Guns")
+local gunSelected = ""
+local carSelected = ""
+local toolSelected = ""
+local armorSelected = ""
+local healSelected = ""
+
+BuySection:addDropdown("Guns", {"Handgun", "Classic Pistol", "Combat Pistol", "Micro SMG", "Revolver", "Snubnose", "Pistol .50", "Heavy Pistol", "Skorpion","Tactical SMG", "Sawed Off", "Bullpup SMG", "Autorevolver", "Riot PDW", "Riot Shotgun", "Bullpup Shotgun", "PDW .45", "Shotgun", "Service Rifle", "AR", "Battle Rifle", "Kalashnikov", "Bullpup Rifle", "Carbine"}, function(valuex)
+    gunSelected = valuex
+end)
+BuySection:addButton("Purchase Chosen Gun", function()
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").PurchaseTeamItem:FireServer(gunSelected,"Single",nil)
+        notify(gunSelected, " Purchased")
+    end)
+
+local BuySection = Buy:addSection("Cars")
+BuySection:addDropdown("Cars", {"Hatchback", "Sedan", "Minivan", "Van", "Station Wagon", "Lowrider", "SUV", "Pickup", "Sedan (Facelift)","SUV (Dune)", "Team Pickup", "Convertible", "RV", "Coupe", "Luxury SUV", "Muscle Car", "Sports Car", "Luxury Car", "Supercar", "Hypercar", "Humvee"}, function(valuex)
+    carSelected = valuex
+end)
+BuySection:addButton("Purchase Chosen Car", function()
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").PurchaseTeamItem:FireServer(carSelected,"Single",nil)
+        notify(carSelected, " Purchased")
+    end)
+
+
+
+local BuySection = Buy:addSection("Tools")
+BuySection:addDropdown("Tools", {"Sprayer", "Lockpick", "Drill", "Door Ram"}, function(valuex)
+    toolSelected = valuex
+end)
+BuySection:addButton("Purchase Chosen Tool", function()
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").PurchaseTeamItem:FireServer(toolSelected,"Single",nil)
+        notify(toolSelected, " Purchased")
+    end)
+local BuySection = Buy:addSection("Armor")
+
+BuySection:addDropdown("Armor", {"Light Vest", "Heavy Vest", "Battle Helmet"}, function(valuex)
+    armorSelected = valuex
+end)
+BuySection:addButton("Purchase Chosen Armor", function()
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").PurchaseTeamItem:FireServer(armorSelected,"Single",nil)
+        notify(armorSelected, " Purchased")
+    end)
+local BuySection = Buy:addSection("Heals")
+
+BuySection:addDropdown("Tools", {"Repair Kit", "Medi kit", "Health Booster", "Stamina Booster"}, function(valuex)
+    healSelected = valuex
+end)
+BuySection:addButton("Purchase Chosen Heal", function()
+    game:GetService("ReplicatedStorage"):FindFirstChild("_CS.Events").PurchaseTeamItem:FireServer(healSelected,"Single",nil)
+        notify(healSelected, " Purchased")
+    end)
 -- ESP Page
 local Esp = Main:addPage("ESP | Visuals", 5012544693)
 local EspSection = Esp:addSection("ESP")
@@ -388,16 +494,7 @@ end)
 
 local misc = Main:addPage("Miscellaneous", 5012544693)
 local miscSection = misc:addSection("Misc")
-miscSection:addButton("Unlock cars (LOOP)", function() 
-    while wait(3) do
-        for i,v in pairs(game:GetService("Workspace").PlayerVehicles:GetDescendants()) do
-            if v:IsA("VehicleSeat") or v:IsA("Seat") then
-                v.Disabled = false
-                wait(.3)
-            end
-        end
-    end
-end)
+
 miscSection:addButton("Reset To 50K", function() 
 	for i,v in pairs(workspace.PlayerVehicles:GetChildren()) do
 		game:GetService("ReplicatedStorage")["_CS.Events"].FillUpCar:FireServer(v, 9e9)
@@ -412,11 +509,15 @@ miscSection:addToggle("Mark all atm's", nil, function(state)
         clientMarkerModule:DeleteATMMarkings();
     end
 end)
+miscSection:addButton("Infinite Yeild Mainly For Noclip", function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
 
 local boomSection = misc:addSection("BoomBox player (Hold Boombox")
 boomSection:addButton("Smells Like Teen Spirit", function() 
     game:GetService("Players").LocalPlayer.Character.Boombox.ToolModel.PlayMusicEvent:FireServer("Play","http://www.roblox.com/asset/?id=3077154823")
 end)
+
 boomSection:addButton("Seven Nation Army", function() 
     game:GetService("Players").LocalPlayer.Character.Boombox.ToolModel.PlayMusicEvent:FireServer("Play","http://www.roblox.com/asset/?id=534429024")
 end)
