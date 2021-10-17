@@ -129,7 +129,7 @@ end
 
 wait(1)
 
-notify("Anomic Sour", "Scripts mostly made by H3LLL0 - Forum: F A Z E D")
+notify("Anomic Sour", "Scripts made by H3LLO and Rhot1c - Forum: F A Z E D")
 
 
 local c = 1
@@ -318,7 +318,7 @@ end
 end)
 
 --Vehicle Page
-local Car = Main:addPage("Vehicle", 5012544693)
+local Car = Main:addPage("Vehicle : To Be Added", 5012544693)
 local CarSection = Car:addSection("Fun")
 
 -- ESP Page
