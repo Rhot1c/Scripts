@@ -111,7 +111,7 @@ end
 print("Loading | 20%")
 
 -- Aimbot / Hitboxes Page
-local Aimb = Main:addPage("Main", 5012544693)
+local Aimb = Main:addPage("Hitboxes", 5012544693)
 local ASection1 = Aimb:addSection("HitBoxes")
 ASection1:addToggle("Head hitboxes", nil, function(v)
     Hitboxes = v
@@ -509,6 +509,11 @@ miscSection:addToggle("Mark all atm's", nil, function(state)
         clientMarkerModule:DeleteATMMarkings();
     end
 end)
+miscSection:addButton("Server Hop", function()
+game:GetService("TeleportService"):Teleport(4581966615, game:GetService("Players").LocalPlayer)
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Rhot1c/Scripts/main/AnomicSour.lua'))()
+end)
+
 miscSection:addButton("Infinite Yeild Mainly For Noclip", function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
@@ -539,6 +544,11 @@ for theme, color in pairs(themes) do -- all in one theme changer, i know, im coo
         Main:setTheme(theme, color3)            
     end)
 end
+
+local Ui = Main:addPage("Credits", 5012544693)
+local UISection = Ui:addSection("Thanks to H3LLO for helping make this")
+local UISection = Ui:addSection("Makers : H3llO and Rhot1c")
+
 
 print("Loading | 50%")
 coroutine.wrap(function()
