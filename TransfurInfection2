@@ -32,6 +32,10 @@ section1:addKeybind("Remove Slowness Keybind", Enum.KeyCode.R, function()
     LPlayer.Status.NoShift:Destroy()
     end)
 
+    section1:addSlider("Infected Speed", 1.3, 1, 3, function(x)
+        LPlayer.Status.Speed.Value = x
+        print(x)
+        end)
 
 local Otherpage = venyx:addPage("Others", 5012544693)
 local Othersection = Otherpage:addSection("Spectate")
