@@ -1,0 +1,173 @@
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
+local venyx = library.new("Rhot1c's TI 2", 5013109572)
+
+-- themes
+local themes = {
+Background = Color3.fromRGB(24, 24, 24),
+Glow = Color3.fromRGB(0, 0, 0),
+Accent = Color3.fromRGB(10, 10, 10),
+LightContrast = Color3.fromRGB(20, 20, 20),
+DarkContrast = Color3.fromRGB(14, 14, 14),  
+TextColor = Color3.fromRGB(255, 255, 255)
+}
+
+local camera   = game:GetService("Workspace").Camera
+local wLighting = game:GetService("Lighting")
+local Players  = game:GetService("Players")
+local LPlayer  = Players.LocalPlayer
+-- first page
+local antislow = false
+local clicktp = false
+local tpmouse = game.Players.LocalPlayer:GetMouse()
+local noclip = false
+local autodestroy = false
+local page = venyx:addPage("Player", 5012544693)
+local section1 = page:addSection("Movement")
+
+section1:addKeybind("Remove Slowness Keybind", Enum.KeyCode.R, function()
+    LPlayer.Status.NoMove:Destroy()
+    LPlayer.Status.Slow:Destroy()
+    LPlayer.Status.Dead:Destroy()
+    LPlayer.Status.Ragdoll:Destroy()
+    LPlayer.Status.NoShift:Destroy()
+    end)
+
+
+local Otherpage = venyx:addPage("Others", 5012544693)
+local Othersection = Otherpage:addSection("Spectate")
+
+local plrNum = 1
+local targetName = nil;
+
+
+Othersection:addButton("Next", function()
+    if plrNum < #game.Players:GetPlayers() then
+        plrNum = plrNum + 1
+        for i,v in pairs(game.Players:GetPlayers()) do
+        if i == plrNum then
+        game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+        end
+        end
+        end
+    end)
+
+    Othersection:addButton("Previous", function()
+        if plrNum ~= 1 then
+            plrNum = plrNum - 1
+            end
+            for i,v in pairs(game.Players:GetPlayers()) do
+            if i == plrNum then
+            game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+            end
+            end
+        end)
+
+        Othersection:addButton("View Self", function()    
+            workspace.Camera.CameraSubject = LPlayer.Character.Humanoid       
+        end)
+
+        Othersection:addButton("Teleport to Spectated", function()
+
+                for i,v in pairs(game.Players:GetPlayers()) do
+                if i == plrNum then
+                LPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(0,2,0)
+                workspace.Camera.CameraSubject = LPlayer.Character.Humanoid 
+                end
+                end
+            end)
+
+        local Othersection2 = Otherpage:addSection("Specific")
+        Othersection2:addTextbox("Target Name", "Default", function(plr)
+            print(plr)
+            targetName = plr
+        end)
+
+            Othersection2:addButton("Teleport to target", function()
+                for i,v in pairs(game:service'Players':GetPlayers()) do
+                    if v.Name:match(targetName) then
+                        LPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(0,2,0)
+                        workspace.Camera.CameraSubject = LPlayer.Character.Humanoid    
+                    end
+                end
+            end)
+            Othersection2:addButton("View target", function()
+                for i,v in pairs(game:service'Players':GetPlayers()) do
+                    if v.Name:match(targetName) then
+                        workspace.Camera.CameraSubject = v.Character.Humanoid
+                    end
+                end
+            end)
+            Othersection2:addButton("View Self", function()    
+                workspace.Camera.CameraSubject = LPlayer.Character.Humanoid       
+            end)
+
+            local TPpage = venyx:addPage("Teleports", 5012544693)
+            local TPsec2 = TPpage:addSection("Click TP")
+
+            TPsec2:addKeybind("Click TP Keybind", Enum.KeyCode.V, function()
+                local pos = tpmouse.Hit+Vector3.new(0,2.5,0)
+                pos = CFrame.new(pos.X,pos.Y,pos.Z)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+                end)
+
+                local TPsec = TPpage:addSection("Locations")
+
+            TPsec:addButton("The Escape", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").GATE.CFrame * CFrame.new(0,1,10)
+            end)
+
+            TPsec:addButton("Safe Spot 1", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-223.375, 45, 14.875)
+            end)
+            TPsec:addButton("Safe Spot 2", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-446.75, 70.9316635, -104.875)
+            end)
+            TPsec:addButton("Spawn Outside 1", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-870, 20.3066635, -190.5)
+            end)
+            TPsec:addButton("Spawn Outside 2", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-870, 22.3066635, 55.875)
+            end)
+            TPsec:addButton("Spawn Inside", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Spawns.SpawnLocation.CFrame * CFrame.new(0,2,0)
+            end)
+
+
+        TPsec:addButton("Flame Shotgun ", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["FlameShotgun Buy"].CFrame * CFrame.new(0,3,5)
+            end)
+            TPsec:addButton("Lab", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["Antidote Buy"].CFrame * CFrame.new(3,3,-10)
+            end)
+            TPsec:addButton("Hidden Area - Tree", function()    
+                LPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["Pitchfork Buy"].CFrame * CFrame.new(0,-10,-10)
+            end)
+            TPsec:addKeybind("Safe Teleport", Enum.KeyCode.T, function()
+                LPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-446.75, 70.9316635, -104.875)
+                end)
+
+
+
+
+-- second page
+local theme = venyx:addPage("Settings", 5012544693)
+local colors = theme:addSection("GUI")
+
+
+for theme, color in pairs(themes) do -- all in one theme changer, i know, im cool
+colors:addColorPicker(theme, color, function(color3)
+venyx:setTheme(theme, color3)
+end)
+end
+
+colors:addKeybind("Toggle Keybind", Enum.KeyCode.LeftAlt, function()
+    print("Activated Keybind")
+    venyx:toggle()
+    end, function()
+    print("Changed Keybind")
+    end)
+
+    local cred = venyx:addPage("Credits", 5012544693)
+    local Credits = cred:addSection("Made By Rhot1c")
+-- load
+venyx:SelectPage(venyx.pages[1], true)
