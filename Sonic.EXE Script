@@ -1,0 +1,262 @@
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
+local venyx = library.new("RH", 5013109572)
+
+-- themes
+local themes = {
+Background = Color3.fromRGB(24, 24, 24),
+Glow = Color3.fromRGB(0, 0, 0),
+Accent = Color3.fromRGB(10, 10, 10),
+LightContrast = Color3.fromRGB(20, 20, 20),
+DarkContrast = Color3.fromRGB(14, 14, 14),  
+TextColor = Color3.fromRGB(255, 255, 255)
+}
+
+-- Variables
+local plrNum = 1
+local plyr = game.Players.LocalPlayer
+local hum = plyr.Character.HumanoidRootPart
+local mouse = plyr:GetMouse() 
+local testCframe = nil
+local selectedChar = nil
+local AutoCharacter = false
+local autoReady = false
+local infiniteJump = false
+local UIS = game:GetService'UserInputService';
+_G.JumpHeight = 50;
+-- first page
+
+local plyrPage = venyx:addPage("Player", 5012544693)
+
+local plyrSec = plyrPage:addSection("Human")
+
+plyrSec:addDropdown("Fast Character Select", {"TAILS","KNUCKLES","EGGMAN", "AMY", "CREAM", "SALLY","SHADOW","ROUGE"}, function(selCharacter)
+    print("Selected", selCharacter)
+    selectedChar = selCharacter
+    end)
+
+    plyrSec:addKeybind("Fast Character", Enum.KeyCode.KeypadZero, function()
+local args = {[1] = selectedChar}
+game:GetService("ReplicatedStorage").events.morph_request:FireServer(unpack(args))
+print("Character Fast Selected: ",selectedChar)
+        end)
+
+local bothPSec = plyrPage:addSection("Both")
+
+bothPSec:addToggle("Infinite Jump", nil, function(bool)
+infiniteJump = bool
+print(infiniteJump)
+end)
+
+
+local page = venyx:addPage("Others", 5012544693)
+
+
+local section1 = page:addSection("Spectating")
+
+for i,v in pairs(game.Players:GetPlayers()) do
+    if i == plrNum then
+    game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+    end
+    end
+
+
+    section1:addButton("Spectate Next", function()
+            plrNum = plrNum + 1
+            for i,v in pairs(game.Players:GetPlayers()) do
+            if i == plrNum then
+            game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+            print("Spectating: ", v, "Player Num for: ", v, "is ", plrNum )
+            end
+            end
+    end)
+
+section1:addButton("Spectate Previous", function()
+        plrNum = plrNum - 1
+        for i,v in pairs(game.Players:GetPlayers()) do
+        if i == plrNum then
+        game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+        print("Spectating: ", v, "Player Num for: ", v, "is ", plrNum )
+        end
+        end
+end)
+
+section1:addButton("Spectate Self", function()
+        plrNum = 1
+        for i,v in pairs(game.Players:GetPlayers()) do
+        if i == plrNum then
+        game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+        end
+        end
+end)
+-- Status Check
+print("Loaded Others")
+
+
+local scriptPage = venyx:addPage("Other Scripts", 5012544693)
+local othersSec = scriptPage:addSection("Not Mine")
+
+othersSec:addButton("Infinite YE", function()
+    loadstring(game:HttpGet(('https://pastebin.com/raw/tzTXmYf2'),true))()
+    end)
+
+    othersSec:addButton("Hitbox Expander", function()
+        loadstring(game:HttpGet("http://gameovers.net/Scripts/Free/HitboxExpander/main.lua", true))()
+        end)
+
+
+        othersSec:addButton("ESP", function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandoagoncalves/universal-esp/main/esp.lua", true))()
+            end)
+print("Loaded Teleportation")
+
+
+local theme = venyx:addPage("Settings", 5012544693)
+local colors = theme:addSection("Colors")
+
+for theme, color in pairs(themes) do -- all in one theme changer, i know, im cool
+colors:addColorPicker(theme, color, function(color3)
+venyx:setTheme(theme, color3)
+end)
+end
+local keybinds = theme:addSection("Keybindings")
+
+-- Toggle Menu
+
+keybinds:addKeybind("Toggle Menu", Enum.KeyCode.RightShift, function()
+    print("Activated Keybind")
+    venyx:toggle()
+    end, function()
+    print("Changed Keybind")
+    end)
+
+
+    -- Spectating Keybinds
+
+    local keybinds = theme:addSection("Spectating Keybindings")
+
+
+    keybinds:addKeybind("Spectate Next", Enum.KeyCode.PageDown, function()
+        plrNum = plrNum + 1
+        for i,v in pairs(game.Players:GetPlayers()) do
+        if i == plrNum then
+        game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+        print("Spectating: ", v, "Player Num for: ", v, "is ", plrNum )
+        end
+        end
+        end)
+
+        keybinds:addKeybind("Spectate Previous", Enum.KeyCode.Delete, function()
+            plrNum = plrNum - 1
+            for i,v in pairs(game.Players:GetPlayers()) do
+            if i == plrNum then
+            game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+            print("Spectating: ", v, "Player Num for: ", v, "is ", plrNum )
+            end
+            end
+            end)
+
+            keybinds:addKeybind("Spectate Self", Enum.KeyCode.End, function()
+                plrNum = 1
+                for i,v in pairs(game.Players:GetPlayers()) do
+                if i == plrNum then
+                game.Workspace.Camera.CameraSubject = v.Character.Humanoid
+                end
+                end
+                end)
+
+                print("Loaded Settings")
+
+                local chatPage = venyx:addPage("Chat", 5012544693)
+                local textSec = chatPage:addSection("Text")
+
+                local textPreset1 = ""
+                local textPreset2 = ""
+                local textPreset3 = ""
+
+                textSec:addTextbox("Text1", "Default", function(value, focusLost)
+            textPreset1 = value
+            print("text1 is", textPreset1)
+                end)
+
+                textSec:addTextbox("Text2", "Default", function(value, focusLost)
+                    textPreset2 = value
+                    print("text2 is", textPreset2)
+                end)               
+
+
+                textSec:addTextbox("Text3", "Default", function(value, focusLost)
+                    textPreset3 = value
+                    print("text3 is", textPreset3)
+                end) 
+
+                local textkeySec = chatPage:addSection("Keybinds")
+
+                textkeySec:addKeybind("Text 1", Enum.KeyCode.Insert, function()
+                    local args = {[1] = textPreset1, [2] = "All"}
+                    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+                    end)
+
+                    textkeySec:addKeybind("Text 2", Enum.KeyCode.Home, function()
+local args = {[1] = textPreset2, [2] = "All"}
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+                        end)
+
+                        textkeySec:addKeybind("Text 3", Enum.KeyCode.PageUp, function()
+                            local args = {[1] = textPreset3, [2] = "All"}
+                            game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+                            end)
+
+                local devPage = venyx:addPage("Developer", 5012544693)
+                local cframeSec = devPage:addSection("CFrame")
+
+
+                cframeSec:addButton("Get CFrame", function()
+                    print(hum.CFrame)
+                    hum.CFrame(testCframe)
+                    end)
+
+                    local otherDev = devPage:addSection("Other")
+
+                    otherDev:addButton("Simple Spy", function()
+                        loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
+                        end)
+
+                    print("Loaded Developer")
+
+
+
+
+
+
+-- Functions
+
+function teleportTo(placeCFrame)
+    local plyr = game.Players.LocalPlayer
+    if plyr.Character then
+        hum.CFrame = placeCFrame
+    end
+end
+
+function Action(Object, Function) if Object ~= nil then Function(Object); end end
+
+UIS.InputBegan:connect(function(UserInput)
+    if infiniteJump == true then
+    if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Space then
+        Action(plyr.Character.Humanoid, function(self)
+            if self:GetState() == Enum.HumanoidStateType.Jumping or self:GetState() == Enum.HumanoidStateType.Freefall then
+                Action(self.Parent.HumanoidRootPart, function(self)
+                    self.Velocity = Vector3.new(0, _G.JumpHeight, 0);
+                end)
+            end
+        end)
+    end
+end
+end)
+
+
+
+-- load
+venyx:SelectPage(venyx.pages[1], true)
+
+
+
